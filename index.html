@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GTA Liberty City Stories - PSP Web</title>
-    
-    <script src="https://cdn.jsdelivr.net/npm/coi-serviceworker/coi-serviceworker.min.js"></script>
-
     <style>
         body, html {
             margin: 0;
@@ -47,25 +44,13 @@
             box-shadow: 0 5px 15px rgba(240, 19, 30, 0.4);
             transition: 0.2s;
         }
-        button:hover {
-            transform: scale(1.05);
-            background: #ff1a26;
-        }
-        .warning {
-            font-size: 12px;
-            color: #aaa;
-            margin-top: 20px;
-            max-width: 400px;
-        }
     </style>
 </head>
 <body>
 
     <div id="setup-screen">
         <h1 style="font-size: 3rem; margin-bottom: 10px;">LIBERTY CITY STORIES</h1>
-        <p style="margin-bottom: 30px; opacity: 0.8;">Click to lock navigation and launch emulator</p>
         <button onclick="launchEmulator()">START GAME</button>
-        <p class="warning">Note: Game is ~500MB. It will take a moment to download. If it stays black, refresh once the Service Worker installs.</p>
     </div>
 
     <div id="game-container">
@@ -73,36 +58,21 @@
     </div>
 
     <script>
-        // 1. LOCK NAVIGATION: Prevent accidental tab closing
-        window.onbeforeunload = function() {
-            return "Warning: You are about to leave the game station. Progress may be lost.";
-        };
+        window.onbeforeunload = function() { return "Warning: Leaving the game."; };
 
         function launchEmulator() {
-            // 2. FULLSCREEN: Hide browser bars
             const elem = document.documentElement;
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            } else if (elem.webkitRequestFullscreen) {
-                elem.webkitRequestFullscreen();
-            }
+            if (elem.requestFullscreen) { elem.requestFullscreen(); }
 
-            // 3. UI SWAP: Hide button, show game
             document.getElementById('setup-screen').style.display = 'none';
             document.getElementById('game-container').style.display = 'block';
 
-            // 4. EMULATORJS CONFIG (PSP)
             window.EJS_player = '#game';
             window.EJS_core = 'psp'; 
-            window.EJS_threads = true; // Enabled for PPSSPP
-            
-            // Your Archive.org Link
+            window.EJS_threads = true; 
             window.EJS_gameUrl = 'https://archive.org/download/grand-theft-auto-vice-city-stories_202512/Grand%20Theft%20Auto%20-%20Liberty%20City%20Stories.iso';
-            
-            // System files path
             window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
 
-            // Load the engine script
             const loader = document.createElement('script');
             loader.src = 'https://cdn.emulatorjs.org/stable/data/loader.js';
             document.head.appendChild(loader);

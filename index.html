@@ -12,7 +12,7 @@
             height: 100%;
             background-color: #000;
             color: #f3f3f3;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: sans-serif;
             overflow: hidden;
         }
         #setup-screen {
@@ -21,9 +21,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.alphacoders.com/941/94165.jpg');
-            background-size: cover;
-            background-position: center;
+            background: #111;
             text-align: center;
         }
         #game-container {
@@ -39,17 +37,14 @@
             border: none;
             cursor: pointer;
             font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            box-shadow: 0 5px 15px rgba(240, 19, 30, 0.4);
-            transition: 0.2s;
         }
     </style>
 </head>
 <body>
 
     <div id="setup-screen">
-        <h1 style="font-size: 3rem; margin-bottom: 10px;">LIBERTY CITY STORIES</h1>
+        <h1>GTA: LIBERTY CITY STORIES</h1>
+        <p>Bypassing CORS and Loading Game...</p>
         <button onclick="launchEmulator()">START GAME</button>
     </div>
 
@@ -58,21 +53,29 @@
     </div>
 
     <script>
-        window.onbeforeunload = function() { return "Warning: Leaving the game."; };
+        // Prevent accidental tab closing
+        window.onbeforeunload = function() { return "Progress will be lost!"; };
 
         function launchEmulator() {
+            // Enter Fullscreen
             const elem = document.documentElement;
             if (elem.requestFullscreen) { elem.requestFullscreen(); }
 
             document.getElementById('setup-screen').style.display = 'none';
             document.getElementById('game-container').style.display = 'block';
 
+            // EMULATORJS CONFIG
             window.EJS_player = '#game';
             window.EJS_core = 'psp'; 
             window.EJS_threads = true; 
-            window.EJS_gameUrl = 'https://archive.org/download/grand-theft-auto-vice-city-stories_202512/Grand%20Theft%20Auto%20-%20Liberty%20City%20Stories.iso';
+
+            // THE CORS FIX:
+            const rawGameUrl = 'https://archive.org/download/grand-theft-auto-vice-city-stories_202512/Grand%20Theft%20Auto%20-%20Liberty%20City%20Stories.iso';
+            window.EJS_gameUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(rawGameUrl);
+            
             window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
 
+            // Load the engine
             const loader = document.createElement('script');
             loader.src = 'https://cdn.emulatorjs.org/stable/data/loader.js';
             document.head.appendChild(loader);
